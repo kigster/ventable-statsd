@@ -8,7 +8,7 @@ module Ventable
 
     DEFAULT_CONFIGURATION = ->(event) { { method: :increment,
                                           value:  1,
-                                          name:   event_to_metric(event) + '_count' } }
+                                          name:   event_to_metric(event) + '.count' } }
 
     # Main interface class which delegates some methods to the instance of
     # statsd in order to increment, or gauge/set various metrics.
@@ -82,7 +82,7 @@ module Ventable
         end
 
         if event.class.respond_to?(:statsd_config)
-          config.merge!(event.class.statsd_config)
+          config.merge!(event.class.statsd_config(event))
         end
 
         config
@@ -94,7 +94,8 @@ module Ventable
           name.
           gsub(/.*::/, '').
           underscore.
-          gsub(/_?event/, '')
+          gsub(/_?event/, '').
+          gsub('_', '.')
       end
     end
   end

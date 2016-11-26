@@ -8,11 +8,11 @@ module MyModule
   class FraudDetectedEvent
     include Ventable::Event
     class << self
-      def statsd_config
+      def statsd_config(event = nil)
         {
           method:  :gauge,
           value:   0.1,
-          name:    'frauds_detected_this_hour',
+          name:    'frauds.detected_this_hour',
           options: { sample_rate: 0.1 }
         }
       end
@@ -31,9 +31,9 @@ describe Ventable::Statsd do
   let(:fake_statsd) { FakeStatsd.new }
   before { Ventable::Statsd.configure { |config| config.statsd = fake_statsd } }
 
-  context 'user_registered_event_count' do
+  context 'user.registered.event_count' do
     it 'should increment counter on statsd' do
-      expect(fake_statsd).to receive(:increment).with('user_registered_count', 1, {})
+      expect(fake_statsd).to receive(:increment).with('user.registered.count', 1, {})
       MyModule::UserRegisteredEvent.new.fire!
     end
 
@@ -44,7 +44,7 @@ describe Ventable::Statsd do
             {
               method:  :set,
               value:   10,
-              name:    Ventable::Statsd.event_to_metric(event) + '_set',
+              name:    Ventable::Statsd.event_to_metric(event) + '.set',
               options: { something_important: false }
             }
           end
@@ -52,15 +52,15 @@ describe Ventable::Statsd do
       end
       it 'should increment counter on statsd' do
         expect(fake_statsd).to receive(:set).with(
-          'user_registered_set', 10, { something_important: false })
+          'user.registered.set', 10, { something_important: false })
         MyModule::UserRegisteredEvent.new.fire!
       end
     end
   end
 
-  context 'frauds_detected_this_hour' do
+  context 'frauds.detected_this_hour' do
     it 'should update the gauge on statsd' do
-      expect(fake_statsd).to receive(:gauge).with('frauds_detected_this_hour', 0.1, { sample_rate: 0.1 })
+      expect(fake_statsd).to receive(:gauge).with('frauds.detected_this_hour', 0.1, { sample_rate: 0.1 })
       MyModule::FraudDetectedEvent.new.fire!
     end
   end
@@ -68,7 +68,7 @@ describe Ventable::Statsd do
   context 'when disabled' do
     before { Ventable::Statsd.disable! }
     it 'should not call statsd at all' do
-      expect(fake_statsd).not_to receive(:gauge).with('frauds_detected_this_hour', 0.1, { sample_rate: 0.1 })
+      expect(fake_statsd).not_to receive(:gauge).with('frauds.detected_this_hour', 0.1, { sample_rate: 0.1 })
       MyModule::FraudDetectedEvent.new.fire!
     end
   end
@@ -76,7 +76,7 @@ describe Ventable::Statsd do
   context 'when re-enabled' do
     before { Ventable::Statsd.disable!; Ventable::Statsd.enable! }
     it 'should not call statsd at all' do
-      expect(fake_statsd).to receive(:gauge).with('frauds_detected_this_hour', 0.1, { sample_rate: 0.1 })
+      expect(fake_statsd).to receive(:gauge).with('frauds.detected_this_hour', 0.1, { sample_rate: 0.1 })
       MyModule::FraudDetectedEvent.new.fire!
     end
   end
@@ -85,12 +85,12 @@ describe Ventable::Statsd do
     class Moo
       include Ventable::Statsd
       def boo
-        tracker.increment('moo_module_count', 1)
+        tracker.increment('moo.boo.count', 1)
       end
     end
 
     it 'should increment the statistic' do
-      expect(fake_statsd).to receive(:increment).with('moo_module_count', 1)
+      expect(fake_statsd).to receive(:increment).with('moo.boo.count', 1)
       Moo.new.boo
     end
   end
