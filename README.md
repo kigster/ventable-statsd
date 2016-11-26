@@ -2,6 +2,9 @@
 [![Build Status](https://travis-ci.org/kigster/ventable-statsd.svg?branch=master)](https://travis-ci.org/kigster/ventable-statsd)
 [![Gem Version](https://badge.fury.io/rb/ventable-statsd.svg)](https://badge.fury.io/rb/ventable-statsd)
 [![MIT licensed](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/kigster/simple-feed/master/LICENSE.txt)
+[![Code Climate](https://codeclimate.com/repos/5838e1481bb659572d005ee8/badges/056591d5b5c1875fceac/gpa.svg)](https://codeclimate.com/repos/5838e1481bb659572d005ee8/feed)
+[![Test Coverage](https://codeclimate.com/repos/5838e1481bb659572d005ee8/badges/056591d5b5c1875fceac/coverage.svg)](https://codeclimate.com/repos/5838e1481bb659572d005ee8/coverage)
+[![Issue Count](https://codeclimate.com/repos/5838e1481bb659572d005ee8/badges/056591d5b5c1875fceac/issue_count.svg)](https://codeclimate.com/repos/5838e1481bb659572d005ee8/feed)
 
 # Ventable::Statsd – Easily Track Application Events with Statsd
 
